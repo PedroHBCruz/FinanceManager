@@ -1,9 +1,12 @@
 package br.com.FinanceManager.services;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import br.com.FinanceManager.exceptions.ErroAutenticacao;
 import br.com.FinanceManager.exceptions.RegraNegocioException;
 import br.com.FinanceManager.model.Usuario;
 import br.com.FinanceManager.repositories.UsuarioRepository;
@@ -21,7 +24,19 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public Usuario autenticar(String email, String senha) {
-		// TODO Auto-generated method stub
+		Optional<Usuario> usuario = repository.findByEmail(email);
+		
+//		if(!usuario.isPresent() ||!usuario.get().getSenha().equals(senha) ) {
+//			throw new ErroAutenticacao("Email ou senha incorretos.");
+//		}
+		
+		if(!usuario.isPresent()) {
+			throw new ErroAutenticacao("Usuário não encontrado para o email informado.");
+		}
+		
+		if(!usuario.get().getSenha().equals(senha)) {
+			throw new ErroAutenticacao("Senha inválida.");
+		}
 		return null;
 	}
 
