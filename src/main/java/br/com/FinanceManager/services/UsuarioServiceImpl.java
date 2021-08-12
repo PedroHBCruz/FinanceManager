@@ -1,5 +1,7 @@
 package br.com.FinanceManager.services;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import br.com.FinanceManager.exceptions.RegraNegocioException;
@@ -24,16 +26,17 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
+	@Transactional
 	public Usuario salvarUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return null;
+		validarEmail(usuario.getEmail());
+		return repository.save(usuario);
 	}
 
 	@Override
 	public void validarEmail(String email) {
 		boolean existe = repository.existsByEmail(email);
 		if(existe) {
-			throw new RegraNegocioException("Email já existente.");
+			throw new RegraNegocioException("Já existe um usuário cadastrado com este email.");
 		}
 	}
 
