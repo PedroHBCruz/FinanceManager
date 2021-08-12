@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.FinanceManager.api.dto.UsuarioDTO;
+import br.com.FinanceManager.exceptions.ErroAutenticacao;
 import br.com.FinanceManager.exceptions.RegraNegocioException;
 import br.com.FinanceManager.model.Usuario;
 import br.com.FinanceManager.services.UsuarioService;
@@ -19,9 +20,20 @@ public class UsuarioResource {
 
 	@Autowired
 	private UsuarioService service;
-
+	
+	@PostMapping("/autenticar")
+	public ResponseEntity autenticar(@RequestBody UsuarioDTO dto) {
+		try {
+			Usuario usuarioAutenticado = service.autenticar(dto.getEmail(), dto.getSenha());
+			return ResponseEntity.ok(usuarioAutenticado);
+		}catch (ErroAutenticacao e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}	
+	}
+	
 	@PostMapping
 	public ResponseEntity salvar(@RequestBody UsuarioDTO dto){
+		
 		Usuario usuario = Usuario.builder()
 				.nome(dto.getNome())
 				.email(dto.getEmail())
