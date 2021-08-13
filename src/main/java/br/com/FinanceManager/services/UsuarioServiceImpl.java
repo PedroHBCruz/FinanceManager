@@ -59,11 +59,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public Usuario fromDTO(UsuarioDTO objDto) {
 		return new Usuario(null, objDto.getNome(), objDto.getEmail(), objDto.getSenha());
 	}
-	
-	public Usuario buscaPorId(Long id) {
-		Optional<Usuario> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new RegraNegocioException(
-				" Objeto não encontrado ! id:"+ id +"tipo:"+ Usuario.class.getName()));
+
+	@Override
+	public Optional<Usuario> obterPorId(Long id) {
+		return repository.findById(id);
 	}
+	
+	
 
 }

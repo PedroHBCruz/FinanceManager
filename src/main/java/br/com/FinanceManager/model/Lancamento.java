@@ -19,11 +19,17 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import br.com.FinanceManager.model.enums.StatusLancamento;
 import br.com.FinanceManager.model.enums.TipoLancamento;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "lancamento", schema = "financas")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Lancamento {
 
 	@Id
@@ -51,23 +57,5 @@ public class Lancamento {
 	
 	@Enumerated(value = EnumType.STRING)
 	private StatusLancamento status;
-
-	public Lancamento() {
-
-	}
-	
-	public Lancamento(Long id, String descricao, Integer ano, Integer mes, Usuario usuario, BigDecimal valor,
-			LocalDate dataCadastro, TipoLancamento tipo, StatusLancamento status) {
-		super();
-		this.id = id;
-		this.descricao = descricao;
-		this.ano = ano;
-		this.mes = mes;
-		this.usuario = usuario;
-		this.valor = valor;
-		this.dataCadastro = dataCadastro;
-		this.tipo = tipo;
-		this.status = status;
-	}
 	
 }

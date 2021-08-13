@@ -1,5 +1,7 @@
 package br.com.FinanceManager.services;
 
+import java.util.Optional;
+
 import br.com.FinanceManager.api.dto.UsuarioDTO;
 import br.com.FinanceManager.model.Usuario;
 
@@ -13,6 +15,6 @@ public interface UsuarioService {
 	
 	Usuario fromDTO(UsuarioDTO objDto);
 	
-	Usuario buscaPorId(Long id);
+	Optional<Usuario> obterPorId(Long id);
 	
 }
