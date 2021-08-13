@@ -6,13 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Builder;
 import lombok.Data;
 
 
 @Table(name = "usuario", schema = "financas")
 @Data
-@Builder
 @Entity
 public class Usuario { 
   
@@ -22,5 +20,18 @@ public class Usuario {
 	private String nome;
 	private String email;
 	private String senha;
+	
+	public Usuario() {
+		
+	}
+	
+	
+	public Usuario(Long id, String nome, String email, String senha) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+	}
 
 }
