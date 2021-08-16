@@ -47,7 +47,7 @@ public class LancamentoResource {
 		lancamentoFiltro.setAno(ano);
 
 		Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
-		if (usuario.isPresent()) {
+		if (!usuario.isPresent()) {
 			return ResponseEntity.badRequest()
 					.body("Não foi possivel realizar a consulta. Usuário não encontrado para o Id informado.");
 		} else {
