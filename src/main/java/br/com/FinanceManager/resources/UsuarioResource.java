@@ -14,13 +14,15 @@ import br.com.FinanceManager.api.dto.UsuarioDTO;
 import br.com.FinanceManager.exceptions.ErroAutenticacao;
 import br.com.FinanceManager.model.Usuario;
 import br.com.FinanceManager.services.UsuarioService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@RequiredArgsConstructor
 public class UsuarioResource {
 
 	@Autowired
-	private UsuarioService service;
+	private final UsuarioService service;
 	
 	
 	@PostMapping("/autenticar")

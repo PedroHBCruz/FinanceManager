@@ -24,39 +24,39 @@ import br.com.FinanceManager.model.enums.StatusLancamento;
 import br.com.FinanceManager.model.enums.TipoLancamento;
 import br.com.FinanceManager.services.LancamentoService;
 import br.com.FinanceManager.services.UsuarioService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/lancamentos")
+@RequiredArgsConstructor
 public class LancamentoResource {
 
 	@Autowired
-	private LancamentoService service;
-	private UsuarioService usuarioService;
+	private final LancamentoService service;
+	@Autowired
+	private final UsuarioService usuarioService;
 
 	@GetMapping
-	public ResponseEntity buscar(
-			@RequestParam(value = "descricao", required = false) String descricao,
+	public ResponseEntity buscar(@RequestParam(value = "descricao", required = false) String descricao,
 			@RequestParam(value = "mes", required = false) Integer mes,
 			@RequestParam(value = "ano", required = false) Integer ano,
-			@RequestParam(value = "usuario", required = false) Long idUsuario
-			){
+			@RequestParam(value = "usuario", required = false) Long idUsuario) {
 		Lancamento lancamentoFiltro = new Lancamento();
 		lancamentoFiltro.setDescricao(descricao);
 		lancamentoFiltro.setMes(mes);
 		lancamentoFiltro.setAno(ano);
-		
+
 		Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
-		if(usuario.isPresent()) {
-			return ResponseEntity.badRequest().body("Não foi possivel realizar a consulta. Usuário não encontrado para o Id informado.");
-		}else {
+		if (usuario.isPresent()) {
+			return ResponseEntity.badRequest()
+					.body("Não foi possivel realizar a consulta. Usuário não encontrado para o Id informado.");
+		} else {
 			lancamentoFiltro.setUsuario(usuario.get());
 		}
 		List<Lancamento> lancamentos = service.buscar(lancamentoFiltro);
 		return ResponseEntity.ok(lancamentos);
 	}
-	
-	
-	
+
 	@PostMapping
 	public ResponseEntity<?> salvar(@RequestBody LancamentoDTO dto) {
 
@@ -107,8 +107,13 @@ public class LancamentoResource {
 				.orElseThrow(() -> new RegraNegocioException("Usuário não encontrado para o Id informado."));
 
 		lancamento.setUsuario(usuario);
+		if (dto.getTipo() != null) {
 		lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
-		lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+		}
+		if (dto.getStatus() != null) {
+			lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+
+		}
 
 		return lancamento;
 	}
