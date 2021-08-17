@@ -1,9 +1,14 @@
 package br.com.FinanceManager.resources;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.FinanceManager.api.dto.UsuarioDTO;
 import br.com.FinanceManager.exceptions.ErroAutenticacao;
 import br.com.FinanceManager.model.Usuario;
+import br.com.FinanceManager.services.LancamentoService;
 import br.com.FinanceManager.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +29,8 @@ public class UsuarioResource {
 
 	@Autowired
 	private final UsuarioService service;
+	@Autowired
+	private final LancamentoService lancamentoService;
 	
 	
 	@PostMapping("/autenticar")
@@ -48,6 +56,16 @@ public class UsuarioResource {
 //		Usuario obj = service.fromDTO(dto);
 //		Usuario usuarioSalvo = service.salvarUsuario(obj);
 //		return new ResponseEntity(usuarioSalvo, HttpStatus.CREATED);
+	}
+	@GetMapping("/{id}/saldo")
+	public ResponseEntity obterSaldo(@PathVariable Long id) {
+		Optional<Usuario> usuario = service.obterPorId(id);
+		
+		if(!usuario.isPresent()) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		BigDecimal saldo = lancamentoService.obterSaldoPorUsuario(id);
+		return ResponseEntity.ok(saldo);
 	}
 }
 
