@@ -5,7 +5,6 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +43,7 @@ public class UsuarioResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> salvar(@RequestBody UsuarioDTO dto){
+	public ResponseEntity<Usuario> salvar(@RequestBody UsuarioDTO dto){
 		
 		Usuario obj = service.fromDTO(dto);
 		obj = service.salvarUsuario(obj);
@@ -58,11 +57,11 @@ public class UsuarioResource {
 //		return new ResponseEntity(usuarioSalvo, HttpStatus.CREATED);
 	}
 	@GetMapping("/{id}/saldo")
-	public ResponseEntity obterSaldo(@PathVariable Long id) {
+	public ResponseEntity<?> obterSaldo(@PathVariable Long id) {
 		Optional<Usuario> usuario = service.obterPorId(id);
 		
 		if(!usuario.isPresent()) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 		BigDecimal saldo = lancamentoService.obterSaldoPorUsuario(id);
 		return ResponseEntity.ok(saldo);
